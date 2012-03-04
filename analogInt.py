@@ -22,38 +22,72 @@ ZeroDivisionError: integer division or modulo by zero
 """
 
 
-class HalfAnalogInt(int):
+class ZeroDAnalogInt(int):
     def __sub__(self, x):
-        return FullAnalogInt(int.__add__(int.__sub__(self, x),1))
+        return OneDAnalogInt(int.__add__(int.__sub__(self, x),1))
     def __neg__(self):
-        return HalfAnalogInt(int.__sub__(self, 1))
+        return ZeroDAnalogInt(int.__sub__(self, 1))
 
-class FullAnalogInt(int):
+class OneDAnalogInt(int):
     def __add__(self, x):
-        return FullAnalogInt(int.__add__(self, x))
+        return OneDAnalogInt(int.__add__(self, x))
     def __sub__(self, x):
-        return FullAnalogInt(int.__sub__(self, x))
+        return OneDAnalogInt(int.__sub__(self, x))
     def __mul__(self, other):
-        return FullAnalogInt(int.__mul__(self, other))
+        return TwoDAnalogInt(self, other)
     def __floordiv__(self, other):
-        return FullAnalogInt(int.__floordiv__(self, other))
+        return OneDAnalogInt(int.__floordiv__(self, other))
     def __mod__(self, other):
-        return FullAnalogInt(int.__mod__(self, other))
+        return OneDAnalogInt(int.__mod__(self, other))
     def __divmod__(self, other):
-        return FullAnalogInt(int.__divmod__(self, other))
+        return OneDAnalogInt(int.__divmod__(self, other))
     def __pow__(self, other, modulo=None):
-        return FullAnalogInt(int.__pow__(self, other, modulo))
+        if other == 2:
+            return TwoDAnalogInt(self, self)
+        else:
+            raise TooManyDimensionsError
     def __div__(self, other):
-        return FullAnalogInt(int.__div__(self, other))
+        return OneDAnalogInt(int.__div__(self, other))
     def __truediv__(self, other):
-        return FullAnalogInt(int.__truediv__(self, other))
+        return OneDAnalogInt(int.__truediv__(self, other))
     def __str__(self):
         return "(I" + ''.join(['-' for i in range(self)]) + "I)"
     def __repr__(self):
         return self.__str__()
+    def __or__(self, x):
+        return TwoDAnalogInt(self)
 
-I = HalfAnalogInt(0)
-II = FullAnalogInt(0)
+class TwoDAnalogInt:
+    def __init__(self, width, height=0):
+        self.width = OneDAnalogInt(width)
+        self.height = OneDAnalogInt(height)
+    def __or__(self, x):
+        self.height = self.height + 1
+        return self
+    def __str__(self):
+        return ("(I" + ''.join(['-' for i in range(self.width)]) + "I" +
+                ''.join(["\n |" + ''.join([' ' for i in range(self.width)]) + "l"
+                           for j in range(self.height)]) +
+                "\n |" + ''.join(['-' for i in range(self.width)]) + "I)")
+    def __repr__(self):
+        return self.__str__()
+    def __div__(self, other):
+        self.area = self.width.__int__() * self.height.__int__()
+        if self.area % other != 0:
+            raise NonIntegerDivisionError
+        return OneDAnalogInt(self.area / other.__int__())
+
+class NonIntegerDivisionError(Exception):
+    pass
+
+class TooManyDimensionsError(Exception):
+    pass
+
+
+
+I = ZeroDAnalogInt(0)
+l = ZeroDAnalogInt(0)
+II = OneDAnalogInt(0)
 
 
 """
