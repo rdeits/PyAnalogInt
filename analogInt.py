@@ -7,6 +7,8 @@ Inspired by: http://weegen.home.xs4all.nl/eelis/analogliterals.xhtml by Eelis.
 
 Usage:
 >>> from analogInt import *
+>>> (I---I) == 3
+True
 >>> (I----I) / (I--I)
 (I--I)
 >>> (I--I) + (I--I)
