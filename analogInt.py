@@ -22,10 +22,14 @@ class OneDAnalogInt(int):
     def __sub__(self, x):
         return OneDAnalogInt(int.__sub__(self, x))
     def __mul__(self, other):
-        return TwoDAnalogInt(self, other)
+        result = TwoDAnalogInt(self)
+        result.height = other
+        return result
     def __pow__(self, other, modulo=None):
         if other == 2:
-            return TwoDAnalogInt(self, self)
+            result = TwoDAnalogInt(self)
+            result.height = self
+            return result
         else:
             raise ValueError("I don't know how to do more than squaring") 
     def __str__(self):
@@ -35,8 +39,9 @@ class OneDAnalogInt(int):
     def __or__(self, x):
         return TwoDAnalogInt(self)
 
-class TwoDAnalogInt:
+class TwoDAnalogInt(int):
     def __init__(self, width, height=0):
+        super(int, self).__init__(self)
         self.width = OneDAnalogInt(width)
         self.height = OneDAnalogInt(height)
     def __or__(self, x):
