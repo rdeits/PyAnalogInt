@@ -7,6 +7,7 @@ Inspired by: [http://weegen.home.xs4all.nl/eelis/analogliterals.xhtml](http://we
 
 
 Usage:
+
     >>> from analogInt import *
     >>> (I-I) == 1
     True
@@ -27,7 +28,6 @@ Usage:
      |   l
      |   l
      |---I)
-    
     >>> (I----I) * (I---I)
     (I----I
      |    l
