@@ -6,23 +6,11 @@ Inspired by: http://weegen.home.xs4all.nl/eelis/analogliterals.xhtml by Eelis.
 
 
 Usage:
->>> from analogInt import *
->>> (I---I) == 3
-True
->>> (I----I) / (I--I)
-(I--I)
->>> (I--I) + (I--I)
-(I----I)
->>> (I---I) - (I-I)
-(I--I)
->>> (I---I) / (II)
-ZeroDivisionError: integer division or modulo by zero
->>> (I---I) ** (I--I)
-(I---------I)
+(see Readme.md)
 """
 
 
-class ZeroDAnalogInt(int):
+class OneDBuilder(int):
     def __sub__(self, x):
         return OneDAnalogInt(int.__add__(int.__sub__(self, x),1))
     def __neg__(self):
@@ -35,21 +23,11 @@ class OneDAnalogInt(int):
         return OneDAnalogInt(int.__sub__(self, x))
     def __mul__(self, other):
         return TwoDAnalogInt(self, other)
-    def __floordiv__(self, other):
-        return OneDAnalogInt(int.__floordiv__(self, other))
-    def __mod__(self, other):
-        return OneDAnalogInt(int.__mod__(self, other))
-    def __divmod__(self, other):
-        return OneDAnalogInt(int.__divmod__(self, other))
     def __pow__(self, other, modulo=None):
         if other == 2:
             return TwoDAnalogInt(self, self)
         else:
-            raise TooManyDimensionsError
-    def __div__(self, other):
-        return OneDAnalogInt(int.__div__(self, other))
-    def __truediv__(self, other):
-        return OneDAnalogInt(int.__truediv__(self, other))
+            raise ValueError("I don't know how to do more than squaring") 
     def __str__(self):
         return "(I" + ''.join(['-' for i in range(self)]) + "I)"
     def __repr__(self):
@@ -74,19 +52,13 @@ class TwoDAnalogInt:
     def __div__(self, other):
         self.area = self.width.__int__() * self.height.__int__()
         if self.area % other != 0:
-            raise NonIntegerDivisionError
+            raise ValueError("Non-integer division") 
+        if isinstance(other, TwoDAnalogInt):
+            raise ValueError("Can't divide rectangle by another rectangle")
         return OneDAnalogInt(self.area / other.__int__())
 
-class NonIntegerDivisionError(Exception):
-    pass
-
-class TooManyDimensionsError(Exception):
-    pass
-
-
-
-I = ZeroDAnalogInt(0)
-l = ZeroDAnalogInt(0)
+I = OneDBuilder(0)
+l = TwoDAnalogInt(0)
 II = OneDAnalogInt(0)
 
 
